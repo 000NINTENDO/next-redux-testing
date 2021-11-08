@@ -1,8 +1,8 @@
-import React from "react";
-import { makeStyles, createStyles } from "@mui/styles";
-import { Box } from "@mui/system";
 import { Button, TextField, Theme, Typography } from "@mui/material";
-import { CurrentTabs } from "..";
+import { Box } from "@mui/system";
+import React, { useState } from "react";
+import { makeStyles, createStyles } from "@mui/styles";
+import { CurrentTabs } from "../pages";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,7 +28,7 @@ interface SignUpInterface {
   handleCurrentTab: any;
 }
 
-const SignIn = ({ handleCurrentTab }: SignUpInterface) => {
+const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
   const classes = useStyles();
 
   return (
@@ -39,8 +39,14 @@ const SignIn = ({ handleCurrentTab }: SignUpInterface) => {
         fontWeight={700}
         marginBottom={2}
       >
-        Sign in
+        Sign Up
       </Typography>
+      <Box marginBottom={2} width="50%" minWidth="300px">
+        <TextField variant="outlined" label="First name" fullWidth={true} />
+      </Box>
+      <Box marginBottom={2} width="50%" minWidth="300px">
+        <TextField variant="outlined" label="Last name" fullWidth={true} />
+      </Box>
       <Box marginBottom={2} width="50%" minWidth="300px">
         <TextField
           variant="outlined"
@@ -57,22 +63,20 @@ const SignIn = ({ handleCurrentTab }: SignUpInterface) => {
         />
       </Box>
       <Button variant="contained" className={classes.signInButton}>
-        Sign In
+        Sign Up
       </Button>
       <Box marginTop={2}>
-        <Typography component="span">Don’t have an account?</Typography>
+        <Typography component="span">Already have an account?</Typography>
         <Typography
           component="span"
           className={classes.signUpText}
-          onClick={() => handleCurrentTab(CurrentTabs.signUp)}
+          onClick={() => handleCurrentTab(CurrentTabs.signIn)}
         >
-          Sign up
+          Sign In
         </Typography>
       </Box>
     </Box>
   );
 };
 
-export default SignIn;
-{
-}
+export default SignUp;

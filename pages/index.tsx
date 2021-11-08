@@ -5,8 +5,8 @@ import { Box } from "@mui/system";
 import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
+import SignIn from "../components/SignIn";
+import SignUp from "../components/SignUp";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
