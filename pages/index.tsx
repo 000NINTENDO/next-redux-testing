@@ -5,8 +5,10 @@ import { Box } from "@mui/system";
 import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
+import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
+import useScreenSize from "../hooks/useScreenSize";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,6 +40,9 @@ type CurrentTab = CurrentTabs.signIn | CurrentTabs.signUp;
 export default function Home() {
   const classes = useStyles();
   const [currentTab, setCurrentTab] = useState<CurrentTab>(CurrentTabs.signIn);
+  const screenSize = useScreenSize();
+
+  console.log("screen size >>>", screenSize);
 
   const handleCurrentTab = (tab: CurrentTab) => {
     setCurrentTab(tab);
