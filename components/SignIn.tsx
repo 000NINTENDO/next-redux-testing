@@ -3,6 +3,8 @@ import { makeStyles, createStyles } from "@mui/styles";
 import { Box } from "@mui/system";
 import { Button, TextField, Theme, Typography } from "@mui/material";
 import { CurrentTabs } from "../pages";
+import ComponentWithScreenSize from "../hoc/ComponentWithScreenSize";
+import useScreenSize from "../hooks/useScreenSize";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,8 +30,10 @@ interface SignUpInterface {
   handleCurrentTab: any;
 }
 
-const SignIn = ({ handleCurrentTab }: SignUpInterface) => {
+const SignIn = ({ handleCurrentTab, sreenSize }: SignUpInterface) => {
   const classes = useStyles();
+
+  console.log("Sign In Screen size >>>", sreenSize);
 
   return (
     <Box>
@@ -73,6 +77,6 @@ const SignIn = ({ handleCurrentTab }: SignUpInterface) => {
   );
 };
 
-export default SignIn;
+export default ComponentWithScreenSize(SignIn);
 {
 }
