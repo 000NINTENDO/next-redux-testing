@@ -80,8 +80,6 @@ afterAll(() => server.close());
 test("Submit form with user inputs and get the signup success response", async () => {
   const { container } = render(<SignUp />);
 
-  server;
-
   userEvent.type(container.querySelector(`input[name="firstname"]`), "sample");
   userEvent.type(container.querySelector(`input[name="lastname"]`), "user");
   userEvent.type(
