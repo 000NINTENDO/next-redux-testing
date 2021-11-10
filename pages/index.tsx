@@ -37,7 +37,7 @@ type CurrentTab = CurrentTabs.signIn | CurrentTabs.signUp;
 
 export default function Home() {
   const classes = useStyles();
-  const [currentTab, setCurrentTab] = useState<CurrentTab>(CurrentTabs.signIn);
+  const [currentTab, setCurrentTab] = useState<CurrentTab>(CurrentTabs.signUp);
 
   const handleCurrentTab = (tab: CurrentTab) => {
     setCurrentTab(tab);
