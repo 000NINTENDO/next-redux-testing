@@ -26,10 +26,18 @@ const res = {
   },
 };
 
-const _mockSignUp = jest.spyOn(authService, "signUp");
-_mockSignUp.mockResolvedValue(res);
+const existingUserResponse = {
+  data: {
+    success: false,
+    message: "User already registeredUser registered successfully",
+    data: {},
+  },
+};
 
-afterEach(() => {
+const _mockSignUp = jest.spyOn(authService, "signUp");
+
+afterAll(() => {
+  jest.clearAllMocks();
   cleanup();
 });
 
@@ -56,6 +64,8 @@ test("Hit submit with all empty inputs", () => {
 });
 
 test("submit form with all the intpus", () => {
+  _mockSignUp.mockResolvedValueOnce(res);
+
   const { container } = render(<SignUp />);
 
   userEvent.type(container.querySelector(`input[name="firstname"]`), "sample");
@@ -88,7 +98,6 @@ test("Submit form with user inputs and get the signup success response", async (
 
   act(() => {
     userEvent.type(screen.getByTestId(/firstname/i), "sample");
-
     userEvent.type(screen.getByTestId(/lastname/i), "user");
     userEvent.type(screen.getByTestId(/username/i), "sample@gmail.com");
     userEvent.type(screen.getByTestId(/password/i), "12345678");
@@ -104,4 +113,28 @@ test("Submit form with user inputs and get the signup success response", async (
   // const successMessage = await screen.queryByTestId(/Registered successfully./);
   // expect(successMessage).not.toBeNull();
   // expect(loader).toBeNull();
+});
+
+test("Not to sign up existing user", async () => {
+  _mockSignUp.mockResolvedValueOnce(existingUserResponse);
+
+  let signUpContainer = null;
+  act(() => {
+    const { container } = render(<SignUp />);
+    signUpContainer = container;
+  });
+  act(() => {
+    userEvent.type(screen.getByTestId(/firstname/i), "sample");
+    userEvent.type(screen.getByTestId(/lastname/i), "user");
+    userEvent.type(screen.getByTestId(/username/i), "sample@gmail.com");
+    userEvent.type(screen.getByTestId(/password/i), "12345678");
+  });
+
+  await waitFor(() => {
+    expect(screen.findByTestId(/circular-progress-bar/i)).toBeTruthy();
+  });
+
+  await waitFor(() => {
+    expect(screen.findByText(/User already registered/i));
+  });
 });
