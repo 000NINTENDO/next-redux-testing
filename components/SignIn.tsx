@@ -46,6 +46,9 @@ const SignIn = ({ handleCurrentTab }: SignUpInterface) => {
           variant="outlined"
           label="Phone, email or username"
           fullWidth={true}
+          inputProps={{
+            "data-testid": "username",
+          }}
         />
       </Box>
       <Box marginBottom={2} width="50%" minWidth="300px">
@@ -54,6 +57,9 @@ const SignIn = ({ handleCurrentTab }: SignUpInterface) => {
           label="Password"
           fullWidth={true}
           className={classes.inputField}
+          inputProps={{
+            "data-testid": "password",
+          }}
         />
       </Box>
       <Button variant="contained" className={classes.signInButton}>
@@ -65,6 +71,7 @@ const SignIn = ({ handleCurrentTab }: SignUpInterface) => {
           component="span"
           className={classes.signUpText}
           onClick={() => handleCurrentTab(CurrentTabs.signUp)}
+          aria-label="switch to sign up"
         >
           Sign up
         </Typography>

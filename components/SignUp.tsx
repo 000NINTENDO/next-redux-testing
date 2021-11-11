@@ -83,8 +83,7 @@ const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
       return;
     }
 
-    axios.post(`http://localhost:5000/user/signup`, signUpState).then((res) => {
-      console.log("Response >>>", res);
+    authService.signUp(signUpState).then((res) => {
       if (res) {
         setIsLoading(false);
         if (!res?.data?.success && res?.data?.message) {
@@ -134,6 +133,9 @@ const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
           role="textbox"
           aria-label="firstname"
           onChange={handleChange}
+          inputProps={{
+            "data-testid": "firstname",
+          }}
         />
       </Box>
       <Box marginBottom={2} width="50%" minWidth="300px">
@@ -144,6 +146,9 @@ const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
           name="lastname"
           role="textbox"
           onChange={handleChange}
+          inputProps={{
+            "data-testid": "lastname",
+          }}
         />
       </Box>
       <Box marginBottom={2} width="50%" minWidth="300px">
@@ -154,6 +159,9 @@ const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
           name="username"
           role="textbox"
           onChange={handleChange}
+          inputProps={{
+            "data-testid": "username",
+          }}
         />
       </Box>
       <Box marginBottom={2} width="50%" minWidth="300px">
@@ -165,6 +173,9 @@ const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
           role="textbox"
           className={classes.inputField}
           onChange={handleChange}
+          inputProps={{
+            "data-testid": "password",
+          }}
         />
       </Box>
       <Box marginBottom={2} width="50%" minWidth="300px">
@@ -204,6 +215,7 @@ const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
           component="span"
           className={classes.signUpText}
           onClick={() => handleCurrentTab(CurrentTabs.signIn)}
+          aria-label="switch to sign in"
         >
           Sign In
         </Typography>

@@ -21,7 +21,9 @@
     "**/*.tsx",
     "__mocks__/styleMock.js",
     "__mocks__/fileMock.js",
-    "jest.config.js"
+    "jest.config.js",
+    "tests/signup.test.js",
+    "tests/home.test.js"
   ],
   "exclude": ["node_modules"]
 }
