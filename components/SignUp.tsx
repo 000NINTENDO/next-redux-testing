@@ -7,10 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, createStyles } from "@mui/styles";
 import { CurrentTabs } from "../pages";
-import authRepository from "../api/authRepository/auth";
+import authService from "../api/authRepository/auth";
+import axios from "axios";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,7 +83,7 @@ const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
       return;
     }
 
-    authRepository.signUp(signUpState).then((res) => {
+    axios.post(`http://localhost:5000/user/signup`, signUpState).then((res) => {
       console.log("Response >>>", res);
       if (res) {
         setIsLoading(false);
@@ -96,12 +97,23 @@ const SignUp = ({ handleCurrentTab }: SignUpInterface) => {
         if (res?.data?.success && res?.data?.message && res?.data?.data) {
           localStorage.setItem("userDetails", JSON.stringify(res?.data?.data));
           setSignUpSuccess("Registered successfully.");
+          setSignUpState({
+            ...signUpState,
+            firstname: "",
+            lastname: "",
+            username: "",
+            password: "",
+          });
 
           alertTimeout = setTimeout(() => setSignUpSuccess(""), 5000);
         }
       }
     });
   };
+
+  useEffect(() => {
+    return () => clearTimeout(alertTimeout);
+  }, []);
 
   return (
     <Box>

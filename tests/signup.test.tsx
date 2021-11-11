@@ -1,8 +1,34 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import React from "react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import SignUp from "../components/SignUp";
 import userEvent from "@testing-library/user-event";
 import { setupServer } from "msw/node";
-import { rest } from "msw";
+import { rest, setupWorker } from "msw";
+
+const url = process.env.NEXT_PUBLIC_TWITTER_API;
+const signUpUrl = `${url}/user/signup`;
+
+const server = setupServer(
+  rest.post(`http://localhost:5000/user/signup`, (req, res, ctx) => {
+    return res(
+      ctx.delay(1500),
+      ctx.json({
+        success: true,
+        message: "User registered successfully",
+        data: {
+          firstname: "sample",
+          lastname: "user",
+          password: "12345678",
+          username: "sample@gmail.com",
+        },
+      })
+    );
+  })
+);
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 test("Input existence in signup form", () => {
   const handleCurrentTab = jest.fn();
@@ -52,13 +78,9 @@ test("Not to show alert or success message without submit", () => {
   expect(screen.queryByRole("alert", { name: /Success alert/i })).toBeNull();
 });
 
-const url = process.env.NEXT_PUBLIC_TWITTER_API;
-const signUpUrl = `${url}/user/signup`;
-
-const server = setupServer(
-  rest.post(signUpUrl, (req, res, ctx) => {
-    return res(
-      ctx.delay(1500),
+test("Submit form with user inputs and get the signup success response", async () => {
+  server.use(
+    rest.post("http://localhost:5000/user/signup", (req, res, ctx) => {
       ctx.json({
         success: true,
         message: "User registered successfully",
@@ -68,32 +90,33 @@ const server = setupServer(
           password: "12345678",
           username: "sample@gmail.com",
         },
-      })
-    );
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
-test("Submit form with user inputs and get the signup success response", async () => {
-  const { container } = render(<SignUp />);
-
-  userEvent.type(container.querySelector(`input[name="firstname"]`), "sample");
-  userEvent.type(container.querySelector(`input[name="lastname"]`), "user");
-  userEvent.type(
-    container.querySelector(`input[name="username"]`),
-    "sample@gmail.com"
+      });
+    })
   );
-  userEvent.type(container.querySelector(`input[name="password"]`), "12345678");
 
-  fireEvent.click(screen.getByRole("button", { name: /Sign Up/i }));
+  let loader = null;
 
-  const loader = await screen.queryByTestId(/circular-progress-bar/i);
+  await act(async () => {
+    const { container } = render(<SignUp />);
+    userEvent.type(
+      container.querySelector(`input[name="firstname"]`),
+      "sample"
+    );
+    userEvent.type(container.querySelector(`input[name="lastname"]`), "user");
+    userEvent.type(
+      container.querySelector(`input[name="username"]`),
+      "sample@gmail.com"
+    );
+    userEvent.type(
+      container.querySelector(`input[name="password"]`),
+      "12345678"
+    );
 
+    fireEvent.click(screen.getByRole("button", { name: /Sign Up/i }));
+
+    loader = await screen.queryByTestId(/circular-progress-bar/i);
+  });
   expect(loader).toBeTruthy();
-
   const successMessage = await screen.queryByTestId(/Registered successfully./);
   expect(successMessage).not.toBeNull();
   expect(loader).toBeNull();
